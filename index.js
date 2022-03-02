@@ -5,6 +5,7 @@ const widthInPixelsInput = getById("widthInPixels", HTMLInputElement);
 const heightInPixelsInput = getById("heightInPixels", HTMLInputElement);
 const textColorInput = getById("textColorInput", HTMLInputElement);
 const backgroundColorInput = getById("backgroundColorInput", HTMLInputElement);
+const backgroundTypeSelect = getById("backgroundType", HTMLSelectElement);
 const fontInput = getById("fontInput", HTMLInputElement);
 const sampleCanvas = getById("sample", HTMLCanvasElement);
 const context = sampleCanvas.getContext("2d");
@@ -14,11 +15,30 @@ function drawSymbol(symbol) {
     sampleCanvas.width = desiredWidth;
     sampleCanvas.height = desiredHeight;
     context.fillStyle = backgroundColorInput.value;
-    context.fillRect(0, 0, desiredWidth, desiredHeight);
+    const backgroundType = backgroundTypeSelect[backgroundTypeSelect.selectedIndex].innerText;
+    switch (backgroundType) {
+        case "Rectangle": {
+            context.fillRect(0, 0, desiredWidth, desiredHeight);
+            break;
+        }
+        case "Oval": {
+            context.beginPath();
+            context.ellipse(desiredWidth / 2, desiredHeight / 2, desiredWidth / 2, desiredHeight / 2, 0, 0, 2 * Math.PI);
+            context.fill();
+            break;
+        }
+        case "None": {
+            break;
+        }
+        default: {
+            const reason = new Error("wtf");
+            console.error({ reason, backgroundType, backgroundTypeSelect });
+            throw reason;
+        }
+    }
     context.font = fontInput.value;
     context.fillStyle = textColorInput.value;
     const size = context.measureText(symbol);
-    console.log(size);
     const textWidth = size.width;
     const textHeight = size.actualBoundingBoxAscent;
     context.fillText(symbol, (desiredWidth - textWidth) / 2, (desiredHeight + textHeight) / 2);
@@ -32,6 +52,7 @@ function drawSampleText() {
     heightInPixelsInput,
     textColorInput,
     backgroundColorInput,
+    backgroundTypeSelect,
     fontInput,
 ].forEach((input) => {
     input.addEventListener("input", () => drawSampleText());

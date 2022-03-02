@@ -6,6 +6,7 @@ const widthInPixelsInput = getById("widthInPixels", HTMLInputElement);
 const heightInPixelsInput = getById("heightInPixels", HTMLInputElement);
 const textColorInput = getById("textColorInput", HTMLInputElement);
 const backgroundColorInput = getById("backgroundColorInput", HTMLInputElement);
+const backgroundTypeSelect = getById("backgroundType", HTMLSelectElement);
 const fontInput = getById("fontInput", HTMLInputElement);
 
 const sampleCanvas = getById("sample", HTMLCanvasElement);
@@ -22,11 +23,40 @@ function drawSymbol(symbol: string) {
   sampleCanvas.width = desiredWidth;
   sampleCanvas.height = desiredHeight;
   context.fillStyle = backgroundColorInput.value;
-  context.fillRect(0, 0, desiredWidth, desiredHeight);
+  const backgroundType =
+    backgroundTypeSelect[backgroundTypeSelect.selectedIndex].innerText;
+  switch (backgroundType) {
+    case "Rectangle": {
+      context.fillRect(0, 0, desiredWidth, desiredHeight);
+      break;
+    }
+    case "Oval": {
+      context.beginPath();
+      context.ellipse(
+        desiredWidth / 2,
+        desiredHeight / 2,
+        desiredWidth / 2,
+        desiredHeight / 2,
+        0,
+        0,
+        2 * Math.PI
+      );
+      context.fill();
+      break;
+    }
+    case "None": {
+      break;
+    }
+    default: {
+      const reason = new Error("wtf");
+      console.error({ reason, backgroundType, backgroundTypeSelect });
+      throw reason;
+    }
+  }
   context.font = fontInput.value;
   context.fillStyle = textColorInput.value;
   const size = context.measureText(symbol);
-  console.log(size);
+  //console.log(size);
   const textWidth = size.width;
   const textHeight = size.actualBoundingBoxAscent;
   context.fillText(
@@ -54,6 +84,7 @@ function drawSampleText() {
   heightInPixelsInput,
   textColorInput,
   backgroundColorInput,
+  backgroundTypeSelect,
   fontInput,
 ].forEach((input) => {
   input.addEventListener("input", () => drawSampleText());
@@ -83,16 +114,16 @@ function getSamples(): string[] {
 
 /**
  * Try to move `direction` steps forward in the list of samples.
- * 
+ *
  * Note that we save the value of the sample we are displaying, not the index.
  * Assume the list contains A, B, C, D, and E, in that order, and we ae currently displaying C.
  * Assume someone changes the list to be "A, Z1, Z2, B, C, Z3, Z4, Z5, E".
  * `updateSamples(0)` will make no change, `updateSamples(1)` will display Z3 and `updateSamples(-1)` will display B.
- * 
+ *
  * Assume the list contains A, B, C, D, and E, in that order, and we ae currently displaying C.
  * Assume someone changes the list to be "A, B, D, E".
  * `updateSamples(anything)` will not find C and will always display A, the first item in the list.
- * 
+ *
  * If the list is empty we display a built in default.  The default is not a valid stock symbol so it won't get
  * mixed up with real data on a future call to `updateSamples()`.
  * @param direction How much to move.  +1 will move to the next item.  -1 will move to the previous item.

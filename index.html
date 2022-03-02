@@ -4,9 +4,9 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <div>Width in pixels <input id="widthInPixels" size="4" value="100" /></div>
+    <div>Width in pixels <input id="widthInPixels" size="4" value="128" /></div>
     <div>
-      Height in pixels <input id="heightInPixels" size="4" value="50" />
+      Height in pixels <input id="heightInPixels" size="4" value="128" />
     </div>
     <div>
       Text color
@@ -15,6 +15,14 @@
     <div>
       Background color
       <input id="backgroundColorInput" type="color" value="#00ffff" />
+    </div>
+    <div>
+      Background type
+      <select id="backgroundType">
+        <option>Rectangle</option>
+        <option selected>Oval</option>
+        <option>None</option>
+      </select>
     </div>
     <br />
     <div>
@@ -31,10 +39,9 @@
 
     <br />
 
-    <canvas
-      id="sample"
-      style="margin: 4px; box-shadow: 0 0 2px 2px black"
-    ></canvas>
+    <span class="colorful-background" style="display: inline-block">
+      <canvas id="sample"></canvas>
+    </span>
     <div>
       <button id="nextSample">Next Sample ⯈</button
       ><button id="previousSample">⯇ Previous Sample</button
