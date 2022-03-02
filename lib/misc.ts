@@ -133,9 +133,9 @@ export function makePromise<T = void>() {
 /**
  * Fri Sep 12 275760 17:00:00 GMT-0700 (Pacific Daylight Time)
  * This is a value commonly used as the largest date.
- * 
+ *
  * Strictly speaking this could get a little higher, but this is what is always used on the internet.
- * 
+ *
  * Warning:  If you pass this value to MySQL it will overflow and fail poorly.
  */
 export const MAX_DATE = new Date(8640000000000000);
@@ -143,24 +143,24 @@ export const MAX_DATE = new Date(8640000000000000);
 /**
  * Mon Apr 19 -271821 16:07:02 GMT-0752 (Pacific Daylight Time)
  * This is a value commonly used as the smallest date.
- * 
+ *
  * Strictly speaking this could get a little lower, but this is what is always used on the internet.
- * 
+ *
  * Warning:  If you pass this value to MySQL it will overflow and fail poorly.
  */
 export const MIN_DATE = new Date(-8640000000000000);
 
-export function dateIsValid(date : Date) : boolean {
+export function dateIsValid(date: Date): boolean {
   return isFinite(date.getTime());
 }
 
 /**
  * Looks like a space.  But otherwise treated like a normal character.
  * In particular, HTML will __not__ combine multiple `NON_BREAKING_SPACE` characters like it does for normal spaces.
- * 
- * If you are writing to element.innerHTML you could use "&amp;nbsp;" to get the same result.  If you are writing to 
+ *
+ * If you are writing to element.innerHTML you could use "&amp;nbsp;" to get the same result.  If you are writing to
  * element.innerText or anything that is not HTML, you need to use this constant.
- * 
+ *
  * Google slides still treats this like a normal space. 🙁
  */
-export const NON_BREAKING_SPACE = '\xa0';
+export const NON_BREAKING_SPACE = "\xa0";

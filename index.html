@@ -1,6 +1,7 @@
 <html>
   <head>
     <script type="module" src="index.js"></script>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
     <div>Width in pixels <input id="widthInPixels" size="4" value="100" /></div>
@@ -8,13 +9,12 @@
       Height in pixels <input id="heightInPixels" size="4" value="50" />
     </div>
     <div>
-      Text color <span id="textColorSample" style="width: 1em"></span>
-      <input id="textColorInput" type="color" />
+      Text color
+      <input id="textColorInput" type="color" value="#000000" />
     </div>
     <div>
       Background color
-      <span id="backgroundColorSample" style="width: 1em"></span>
-      <input id="backgroundColorInput" type="color" />
+      <input id="backgroundColorInput" type="color" value="#00ffff" />
     </div>
     <br />
     <div>
@@ -26,10 +26,15 @@
       >.
     </div>
     <div style="display: flex">
-      <input style="flex-grow: 1" id="fontInput" />
+      <input style="flex-grow: 1" id="fontInput" value="23pt cursive" />
     </div>
 
-    <canvas id="sample"></canvas>
+    <br />
+
+    <canvas
+      id="sample"
+      style="margin: 4px; box-shadow: 0 0 2px 2px black"
+    ></canvas>
     <div>
       <button id="nextSample">Next Sample ⯈</button
       ><button id="previousSample">⯇ Previous Sample</button
