@@ -10,9 +10,14 @@ context.fill();
 context.lineWidth = 3;
 context.strokeStyle = "black";
 context.stroke();
+context.font;
 async function downloadTestZip() {
     const code = await fetch("https://raw.githubusercontent.com/Touffy/client-zip/master/src/index.ts");
-    const intro = { name: "intro.txt", lastModified: new Date(), input: "Hello. This is the client-zip library." };
+    const intro = {
+        name: "intro.txt",
+        lastModified: new Date(),
+        input: "Hello. This is the client-zip library.",
+    };
     const canvasBlob = makePromise();
     sampleCanvas.toBlob((blob) => {
         if (!blob) {
@@ -22,7 +27,11 @@ async function downloadTestZip() {
             canvasBlob.resolve(blob);
         }
     });
-    const canvas = { name: "Brad.png", lastModified: new Date(), input: await canvasBlob.promise };
+    const canvas = {
+        name: "Brad.png",
+        lastModified: new Date(),
+        input: await canvasBlob.promise,
+    };
     const blob = await downloadZip([intro, code, canvas]).blob();
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);

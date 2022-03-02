@@ -3,6 +3,48 @@
     <script type="module" src="index.js"></script>
   </head>
   <body>
+    <div>Width in pixels <input id="widthInPixels" size="4" value="100" /></div>
+    <div>
+      Height in pixels <input id="heightInPixels" size="4" value="50" />
+    </div>
+    <div>
+      Text color <span id="textColorSample" style="width: 1em"></span>
+      <input id="textColorInput" type="color" />
+    </div>
+    <div>
+      Background color
+      <span id="backgroundColorSample" style="width: 1em"></span>
+      <input id="backgroundColorInput" type="color" />
+    </div>
+    <br />
+    <div>
+      Font.&nbsp; Use any valid css font. &nbsp;
+      <a
+        href="https://developer.mozilla.org/en-US/docs/Web/CSS/font"
+        target="_blank"
+        >More info</a
+      >.
+    </div>
+    <div style="display: flex">
+      <input style="flex-grow: 1" id="fontInput" />
+    </div>
+
     <canvas id="sample"></canvas>
+    <div>
+      <button id="nextSample">Next Sample ⯈</button
+      ><button id="previousSample">⯇ Previous Sample</button
+      ><button id="saveAll">Save All 💾</button>
+    </div>
+    <br />
+    <div>Symbols:</div>
+    <div>
+      <textarea id="symbols">
+MSFT
+ORCL
+IBM
+T
+    </textarea
+      >
+    </div>
   </body>
 </html>
