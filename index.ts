@@ -93,17 +93,41 @@ previousSampleButton.addEventListener("click", () => {
 
 updateSamples(0);
 
-/*
-context.ellipse(50, 50, 40, 30, 0, 0, 2 * Math.PI);
-context.fillStyle = "red";
-context.fill();
-context.lineWidth = 3;
-context.strokeStyle = "black";
-context.stroke();
-console.log(context.font);
-context.fillStyle="blue";
-context.fillText("MSFT", 50, 10);
-*/
+saveAllButton.addEventListener("click", async () => {
+  async function* images() {
+    const samples = getSamples();
+    for (const symbol of samples) {
+      drawSymbol(symbol);
+      const canvasBlob = makePromise<Blob>();
+      sampleCanvas.toBlob((blob) => {
+        if (!blob) {
+          canvasBlob.reject(new Error("blob is null!"));
+        } else {
+          canvasBlob.resolve(blob);
+        }
+      });
+      yield {
+        name: symbol + ".png",
+        lastModified: new Date(),
+        input: await canvasBlob.promise,
+      };
+    }
+  }
+
+  // get the ZIP stream in a Blob
+  const blob = await downloadZip(images()).blob();
+
+  // make and click a temporary link to download the Blob
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "all_png_files.zip";
+  link.click();
+  link.remove();
+
+  // Put the GUI back into some consistent state.
+  // This program uses the same canvas for the samples and for the real work.
+  updateSamples(0);
+});
 
 async function downloadTestZip() {
   // define what we want in the ZIP

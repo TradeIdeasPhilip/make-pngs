@@ -76,6 +76,35 @@ previousSampleButton.addEventListener("click", () => {
     updateSamples(-1);
 });
 updateSamples(0);
+saveAllButton.addEventListener("click", async () => {
+    async function* images() {
+        const samples = getSamples();
+        for (const symbol of samples) {
+            drawSymbol(symbol);
+            const canvasBlob = makePromise();
+            sampleCanvas.toBlob((blob) => {
+                if (!blob) {
+                    canvasBlob.reject(new Error("blob is null!"));
+                }
+                else {
+                    canvasBlob.resolve(blob);
+                }
+            });
+            yield {
+                name: symbol + ".png",
+                lastModified: new Date(),
+                input: await canvasBlob.promise,
+            };
+        }
+    }
+    const blob = await downloadZip(images()).blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "all_png_files.zip";
+    link.click();
+    link.remove();
+    updateSamples(0);
+});
 async function downloadTestZip() {
     const code = await fetch("https://raw.githubusercontent.com/Touffy/client-zip/master/src/index.ts");
     const intro = {
