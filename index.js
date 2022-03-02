@@ -1,7 +1,6 @@
 import { getById } from "./lib/client-misc.js";
 import { filterMap, makePromise } from "./lib/misc.js";
 import { downloadZip } from "./zip.js";
-console.log("hello world!");
 const widthInPixelsInput = getById("widthInPixels", HTMLInputElement);
 const heightInPixelsInput = getById("heightInPixels", HTMLInputElement);
 const textColorInput = getById("textColorInput", HTMLInputElement);
@@ -105,33 +104,4 @@ saveAllButton.addEventListener("click", async () => {
     link.remove();
     updateSamples(0);
 });
-async function downloadTestZip() {
-    const code = await fetch("https://raw.githubusercontent.com/Touffy/client-zip/master/src/index.ts");
-    const intro = {
-        name: "intro.txt",
-        lastModified: new Date(),
-        input: "Hello. This is the client-zip library.",
-    };
-    const canvasBlob = makePromise();
-    sampleCanvas.toBlob((blob) => {
-        if (!blob) {
-            canvasBlob.reject(new Error("blob is null!"));
-        }
-        else {
-            canvasBlob.resolve(blob);
-        }
-    });
-    const canvas = {
-        name: "Brad.png",
-        lastModified: new Date(),
-        input: await canvasBlob.promise,
-    };
-    const blob = await downloadZip([intro, code, canvas]).blob();
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "test.zip";
-    link.click();
-    link.remove();
-}
-window.downloadTestZip = downloadTestZip;
 //# sourceMappingURL=index.js.map
