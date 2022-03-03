@@ -203,3 +203,19 @@ saveAllButton.addEventListener("click", async () => {
   // This program uses the same canvas for the samples and for the real work.
   updateSamples(0);
 });
+
+function initBackgroundAnimation() {
+  const backgroundForSample = getById("backgroundForSample", HTMLSpanElement);
+  const style = backgroundForSample.style;
+
+  function scheduleNextAnimation() {
+    requestAnimationFrame(doAnimation);
+  }
+  function doAnimation(timestamp: number) {
+    const baseTime = timestamp / 10000;
+    style.setProperty("--rotation", baseTime + "turn");
+    scheduleNextAnimation();
+  }
+  scheduleNextAnimation();
+}
+initBackgroundAnimation();

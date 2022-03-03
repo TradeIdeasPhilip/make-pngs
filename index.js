@@ -125,4 +125,18 @@ saveAllButton.addEventListener("click", async () => {
     link.remove();
     updateSamples(0);
 });
+function initBackgroundAnimation() {
+    const backgroundForSample = getById("backgroundForSample", HTMLSpanElement);
+    const style = backgroundForSample.style;
+    function scheduleNextAnimation() {
+        requestAnimationFrame(doAnimation);
+    }
+    function doAnimation(timestamp) {
+        const baseTime = timestamp / 10000;
+        style.setProperty("--rotation", baseTime + "turn");
+        scheduleNextAnimation();
+    }
+    scheduleNextAnimation();
+}
+initBackgroundAnimation();
 //# sourceMappingURL=index.js.map
