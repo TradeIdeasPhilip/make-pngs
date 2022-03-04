@@ -6,8 +6,11 @@ body {
     #f00 5%,
     #00f 10%
   );
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
-p {
+span {
   background-color: #ffffff80;
   box-shadow: 0 0 0.25em 0.25em #ffffff80;
 }

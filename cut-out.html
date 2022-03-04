@@ -4,8 +4,10 @@
     <link rel="stylesheet" href="cut-out.css" />
     <script type="module" src="cut-out.js"></script>
   </head>
-  <body ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-    <p>Drag and drop image files into this window to convert them.</p>
+  <body>
+    <h1><span>Instructions</span></h1>
+    <p><span>Drag and drop image files into this window to convert them.</span></p>
+    <h1><span>Under the hood</span></h1>
     <img id="initialImg" width="128" height="128" />
     <canvas id="canvas" width="128" height="128"></canvas>
     <img id="finalImg" width="128" height="128" />

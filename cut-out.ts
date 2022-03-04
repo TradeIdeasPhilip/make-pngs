@@ -7,12 +7,10 @@ const canvas = getById("canvas", HTMLCanvasElement);
 const finalImg = getById("finalImg", HTMLImageElement);
 const context = canvas.getContext("2d")!;
 
-/**
- * Inspired by https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop.
- * @param ev
- */
-function dropHandler(ev: DragEvent) {
-  console.log("File(s) dropped");
+document.body.addEventListener("drop", (ev: DragEvent) => {
+ // Inspired by https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop.
+
+  //console.log("File(s) dropped");
 
   // Prevent default behavior (Prevent file from being opened)
   ev.preventDefault();
@@ -22,7 +20,8 @@ function dropHandler(ev: DragEvent) {
     throw new Error("wtf");
   } else if (ev.dataTransfer.items) {
     // Use DataTransferItemList interface to access the file(s)
-    console.log("Use DataTransferItemList interface to access the file(s)");
+    //console.log("Use DataTransferItemList interface to access the file(s)");
+    // On my system I only see this branch of the if.
     for (var i = 0; i < ev.dataTransfer.items.length; i++) {
       // If dropped items aren't files, reject them
       if (ev.dataTransfer.items[i].kind === "file") {
@@ -33,27 +32,29 @@ function dropHandler(ev: DragEvent) {
           // The example I copied this from ignored the possibility of getting a null here.
           // I had to add this if statement to satisfy TypeScript.
         } else {
-          console.log("... file[" + i + "].name = " + file.name);
+          //console.log("... file[" + i + "].name = " + file.name);
           files.push(file);
         }
       }
     }
   } else {
     // Use DataTransfer interface to access the file(s)
-    console.log("Use DataTransfer interface to access the file(s)");
+    //console.log("Use DataTransfer interface to access the file(s)");
     for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-      console.log(
-        "... file[" + i + "].name = " + ev.dataTransfer.files[i].name
-      );
+      //console.log(
+      //  "... file[" + i + "].name = " + ev.dataTransfer.files[i].name
+      //);
     }
   }
 
   processFiles(files);
-}
+});
 
 async function processFiles(files: File[]) {
   switch (files.length) {
     case 0: {
+      // Not strictly an error, but I wouldn't expect to see this.
+      // Seeing this message suggests that we got the right message, but we had trouble decoding it.
       console.log("processFiles([])");
       break;
     }
@@ -139,15 +140,12 @@ function saveFile(name: string, contents: Blob) {
   URL.revokeObjectURL(url);
 }
 
-function dragOverHandler(ev: DragEvent) {
-  console.log("File(s) in drop zone");
+document.body.addEventListener("dragover", (ev: DragEvent) => {
+  //console.log("File(s) in drop zone");
 
   // Prevent default behavior (Prevent file from being opened)
   ev.preventDefault();
-}
-
-(window as any).dropHandler = dropHandler;
-(window as any).dragOverHandler = dragOverHandler;
+});
 
 function initBackgroundAnimation() {
   const backgroundForSample = document.body;

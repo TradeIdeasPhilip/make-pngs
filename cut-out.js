@@ -5,15 +5,13 @@ const initialImg = getById("initialImg", HTMLImageElement);
 const canvas = getById("canvas", HTMLCanvasElement);
 const finalImg = getById("finalImg", HTMLImageElement);
 const context = canvas.getContext("2d");
-function dropHandler(ev) {
-    console.log("File(s) dropped");
+document.body.addEventListener("drop", (ev) => {
     ev.preventDefault();
     const files = [];
     if (!ev.dataTransfer) {
         throw new Error("wtf");
     }
     else if (ev.dataTransfer.items) {
-        console.log("Use DataTransferItemList interface to access the file(s)");
         for (var i = 0; i < ev.dataTransfer.items.length; i++) {
             if (ev.dataTransfer.items[i].kind === "file") {
                 const file = ev.dataTransfer.items[i].getAsFile();
@@ -21,20 +19,17 @@ function dropHandler(ev) {
                     console.log("⁇?", i, ev.dataTransfer.items[i]);
                 }
                 else {
-                    console.log("... file[" + i + "].name = " + file.name);
                     files.push(file);
                 }
             }
         }
     }
     else {
-        console.log("Use DataTransfer interface to access the file(s)");
         for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-            console.log("... file[" + i + "].name = " + ev.dataTransfer.files[i].name);
         }
     }
     processFiles(files);
-}
+});
 async function processFiles(files) {
     switch (files.length) {
         case 0: {
@@ -102,12 +97,9 @@ function saveFile(name, contents) {
     link.remove();
     URL.revokeObjectURL(url);
 }
-function dragOverHandler(ev) {
-    console.log("File(s) in drop zone");
+document.body.addEventListener("dragover", (ev) => {
     ev.preventDefault();
-}
-window.dropHandler = dropHandler;
-window.dragOverHandler = dragOverHandler;
+});
 function initBackgroundAnimation() {
     const backgroundForSample = document.body;
     const style = backgroundForSample.style;
