@@ -8,7 +8,7 @@ const finalImg = getById("finalImg", HTMLImageElement);
 const context = canvas.getContext("2d")!;
 
 document.body.addEventListener("drop", (ev: DragEvent) => {
- // Inspired by https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop.
+  // Inspired by https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop.
 
   //console.log("File(s) dropped");
 
@@ -94,7 +94,15 @@ async function processFile(file: File): Promise<Blob> {
     await sleep(1000);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "#ffffff";
-    context.ellipse(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2, 0, 0, 2*Math.PI);
+    context.ellipse(
+      canvas.width / 2,
+      canvas.height / 2,
+      canvas.width / 2,
+      canvas.height / 2,
+      0,
+      0,
+      2 * Math.PI
+    );
     context.fill();
     context.globalCompositeOperation = "source-in";
     context.drawImage(initialImg, 0, 0);
@@ -110,7 +118,7 @@ let sampleIsPending = false;
 /**
  * Schedules the sample window to be updated soon.
  * If we are processing in batch mode, don't bother to update the sample every time.
- * 
+ *
  * The sample is an <img>.  At the moment the <img> is an exact copy of the <canvas>
  * where we created the image.  I saw some strange artifacts around the clipping area,
  * and I wanted to know if the artifacts would still appear after the image left the
@@ -146,19 +154,3 @@ document.body.addEventListener("dragover", (ev: DragEvent) => {
   // Prevent default behavior (Prevent file from being opened)
   ev.preventDefault();
 });
-
-function initBackgroundAnimation() {
-  const backgroundForSample = document.body;
-  const style = backgroundForSample.style;
-
-  function scheduleNextAnimation() {
-    requestAnimationFrame(doAnimation);
-  }
-  function doAnimation(timestamp: number) {
-    const baseTime = timestamp / 10000;
-    style.setProperty("--rotation", baseTime + "turn");
-    scheduleNextAnimation();
-  }
-  scheduleNextAnimation();
-}
-initBackgroundAnimation();
