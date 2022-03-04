@@ -4,15 +4,10 @@
     <link rel="stylesheet" href="cut-out.css" />
     <script type="module" src="cut-out.js"></script>
   </head>
-  <body>
-    <input type="file" id="input" multiple />
-    <div
-      id="drop_zone"
-      ondrop="dropHandler(event);"
-      ondragover="dragOverHandler(event);"
-    >
-      <p>Drag one or more files to this Drop Zone ...</p>
-      <img id="img" />
-    </div>
+  <body ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+    <p>Drag and drop image files into this window to convert them.</p>
+    <img id="initialImg" width="128" height="128" />
+    <canvas id="canvas" width="128" height="128"></canvas>
+    <img id="finalImg" width="128" height="128" />
   </body>
 </html>

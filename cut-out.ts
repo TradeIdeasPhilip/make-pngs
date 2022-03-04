@@ -1,7 +1,14 @@
-import { getById } from "./lib/client-misc.js";
+import { getBlobFromCanvas, getById } from "./lib/client-misc.js";
+import { sleep } from "./lib/misc.js";
 import { downloadZip } from "./zip.js";
 
-const img = getById("img", HTMLImageElement);
+const initialImg = getById("initialImg", HTMLImageElement);
+const canvas = getById("canvas", HTMLCanvasElement);
+const finalImg = getById("finalImg", HTMLImageElement);
+const context = canvas.getContext("2d")!;
+
+context.ellipse(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2, 0, 0, 2*Math.PI);
+context.clip();
 
 /**
  * Inspired by https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop.
@@ -83,9 +90,17 @@ async function processFiles(files: File[]) {
 }
 
 async function processFile(file: File): Promise<Blob> {
-  // TODO Do the actual processing.  Trim the picture to be a circle.
-  return file;
-  return undefined!;
+  const url = URL.createObjectURL(file);
+  try {
+    initialImg.src = url;
+    await sleep(1000);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(initialImg, 0, 0);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+  // TODO Copy the result into the second <img>.
+  return getBlobFromCanvas(canvas);
 }
 
 function saveFile(name: string, contents: Blob) {

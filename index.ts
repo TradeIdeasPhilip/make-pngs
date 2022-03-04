@@ -1,5 +1,5 @@
-import { getById } from "./lib/client-misc.js";
-import { filterMap, makePromise } from "./lib/misc.js";
+import { getBlobFromCanvas, getById } from "./lib/client-misc.js";
+import { filterMap } from "./lib/misc.js";
 import { downloadZip } from "./zip.js";
 
 const widthInPixelsInput = getById("widthInPixels", HTMLInputElement);
@@ -173,18 +173,10 @@ saveAllButton.addEventListener("click", async () => {
     const samples = getSamples();
     for (const symbol of samples) {
       drawSymbol(symbol);
-      const canvasBlob = makePromise<Blob>();
-      sampleCanvas.toBlob((blob) => {
-        if (!blob) {
-          canvasBlob.reject(new Error("blob is null!"));
-        } else {
-          canvasBlob.resolve(blob);
-        }
-      });
       yield {
         name: symbol + ".png",
         lastModified: new Date(),
-        input: await canvasBlob.promise,
+        input: await getBlobFromCanvas(sampleCanvas),
       };
     }
   }

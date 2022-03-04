@@ -1,6 +1,12 @@
-import { getById } from "./lib/client-misc.js";
+import { getBlobFromCanvas, getById } from "./lib/client-misc.js";
+import { sleep } from "./lib/misc.js";
 import { downloadZip } from "./zip.js";
-const img = getById("img", HTMLImageElement);
+const initialImg = getById("initialImg", HTMLImageElement);
+const canvas = getById("canvas", HTMLCanvasElement);
+const finalImg = getById("finalImg", HTMLImageElement);
+const context = canvas.getContext("2d");
+context.ellipse(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2, 0, 0, 2 * Math.PI);
+context.clip();
 function dropHandler(ev) {
     console.log("File(s) dropped");
     ev.preventDefault();
@@ -58,8 +64,17 @@ async function processFiles(files) {
     }
 }
 async function processFile(file) {
-    return file;
-    return undefined;
+    const url = URL.createObjectURL(file);
+    try {
+        initialImg.src = url;
+        await sleep(1000);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(initialImg, 0, 0);
+    }
+    finally {
+        URL.revokeObjectURL(url);
+    }
+    return getBlobFromCanvas(canvas);
 }
 function saveFile(name, contents) {
     const link = document.createElement("a");

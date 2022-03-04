@@ -1,5 +1,13 @@
-#drop_zone {
-  border: 5px solid blue;
-  width: 200px;
-  height: 100px;
+body {
+  --rotation: 0deg;
+  background: repeating-conic-gradient(
+    from var(--rotation) at 50% 50%,
+    #0f0 0%,
+    #f00 5%,
+    #00f 10%
+  );
+}
+p {
+  background-color: #ffffff80;
+  box-shadow: 0 0 0.25em 0.25em #ffffff80;
 }
