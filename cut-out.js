@@ -5,8 +5,6 @@ const initialImg = getById("initialImg", HTMLImageElement);
 const canvas = getById("canvas", HTMLCanvasElement);
 const finalImg = getById("finalImg", HTMLImageElement);
 const context = canvas.getContext("2d");
-context.ellipse(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2, 0, 0, 2 * Math.PI);
-context.clip();
 function dropHandler(ev) {
     console.log("File(s) dropped");
     ev.preventDefault();
@@ -69,10 +67,15 @@ async function processFile(file) {
         initialImg.src = url;
         await sleep(1000);
         context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "#ffffff";
+        context.ellipse(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2, 0, 0, 2 * Math.PI);
+        context.fill();
+        context.globalCompositeOperation = "source-in";
         context.drawImage(initialImg, 0, 0);
     }
     finally {
         URL.revokeObjectURL(url);
+        context.globalCompositeOperation = "source-over";
     }
     showSampleSoon();
     return getBlobFromCanvas(canvas);

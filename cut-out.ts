@@ -7,9 +7,6 @@ const canvas = getById("canvas", HTMLCanvasElement);
 const finalImg = getById("finalImg", HTMLImageElement);
 const context = canvas.getContext("2d")!;
 
-context.ellipse(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2, 0, 0, 2*Math.PI);
-context.clip();
-
 /**
  * Inspired by https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop.
  * @param ev
@@ -95,9 +92,14 @@ async function processFile(file: File): Promise<Blob> {
     initialImg.src = url;
     await sleep(1000);
     context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#ffffff";
+    context.ellipse(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2, 0, 0, 2*Math.PI);
+    context.fill();
+    context.globalCompositeOperation = "source-in";
     context.drawImage(initialImg, 0, 0);
   } finally {
     URL.revokeObjectURL(url);
+    context.globalCompositeOperation = "source-over";
   }
   showSampleSoon();
   return getBlobFromCanvas(canvas);
