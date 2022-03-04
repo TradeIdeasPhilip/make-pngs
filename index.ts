@@ -198,6 +198,7 @@ saveAllButton.addEventListener("click", async () => {
   link.download = "all_png_files.zip";
   link.click();
   link.remove();
+  // TODO Clean up after the createObjectURL().
 
   // Put the GUI back into some consistent state.
   // This program uses the same canvas for the samples and for the real work.
