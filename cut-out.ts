@@ -99,8 +99,32 @@ async function processFile(file: File): Promise<Blob> {
   } finally {
     URL.revokeObjectURL(url);
   }
-  // TODO Copy the result into the second <img>.
+  showSampleSoon();
   return getBlobFromCanvas(canvas);
+}
+
+let sampleIsPending = false;
+/**
+ * Schedules the sample window to be updated soon.
+ * If we are processing in batch mode, don't bother to update the sample every time.
+ * 
+ * The sample is an <img>.  At the moment the <img> is an exact copy of the <canvas>
+ * where we created the image.  I saw some strange artifacts around the clipping area,
+ * and I wanted to know if the artifacts would still appear after the image left the
+ * canvas.  In fact, the artifacts are still there.
+ * @returns Nothing.
+ */
+async function showSampleSoon() {
+  if (sampleIsPending) {
+    return;
+  }
+  sampleIsPending = true;
+  await sleep(10);
+  sampleIsPending = false;
+  const url = URL.createObjectURL(await getBlobFromCanvas(canvas));
+  finalImg.src = url;
+  await sleep(10);
+  URL.revokeObjectURL(url);
 }
 
 function saveFile(name: string, contents: Blob) {

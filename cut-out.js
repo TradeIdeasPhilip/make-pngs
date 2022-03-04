@@ -74,7 +74,21 @@ async function processFile(file) {
     finally {
         URL.revokeObjectURL(url);
     }
+    showSampleSoon();
     return getBlobFromCanvas(canvas);
+}
+let sampleIsPending = false;
+async function showSampleSoon() {
+    if (sampleIsPending) {
+        return;
+    }
+    sampleIsPending = true;
+    await sleep(10);
+    sampleIsPending = false;
+    const url = URL.createObjectURL(await getBlobFromCanvas(canvas));
+    finalImg.src = url;
+    await sleep(10);
+    URL.revokeObjectURL(url);
 }
 function saveFile(name, contents) {
     const link = document.createElement("a");
