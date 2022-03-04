@@ -105,4 +105,18 @@ function dragOverHandler(ev) {
 }
 window.dropHandler = dropHandler;
 window.dragOverHandler = dragOverHandler;
+function initBackgroundAnimation() {
+    const backgroundForSample = document.body;
+    const style = backgroundForSample.style;
+    function scheduleNextAnimation() {
+        requestAnimationFrame(doAnimation);
+    }
+    function doAnimation(timestamp) {
+        const baseTime = timestamp / 10000;
+        style.setProperty("--rotation", baseTime + "turn");
+        scheduleNextAnimation();
+    }
+    scheduleNextAnimation();
+}
+initBackgroundAnimation();
 //# sourceMappingURL=cut-out.js.map

@@ -146,3 +146,19 @@ function dragOverHandler(ev: DragEvent) {
 
 (window as any).dropHandler = dropHandler;
 (window as any).dragOverHandler = dragOverHandler;
+
+function initBackgroundAnimation() {
+  const backgroundForSample = document.body;
+  const style = backgroundForSample.style;
+
+  function scheduleNextAnimation() {
+    requestAnimationFrame(doAnimation);
+  }
+  function doAnimation(timestamp: number) {
+    const baseTime = timestamp / 10000;
+    style.setProperty("--rotation", baseTime + "turn");
+    scheduleNextAnimation();
+  }
+  scheduleNextAnimation();
+}
+initBackgroundAnimation();
