@@ -60,7 +60,7 @@ async function processFile(file) {
     const url = URL.createObjectURL(file);
     try {
         initialImg.src = url;
-        await sleep(1000);
+        await initialImg.decode();
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.fillStyle = "#ffffff";
         context.ellipse(canvas.width / 2, canvas.height / 2, canvas.width / 2, canvas.height / 2, 0, 0, 2 * Math.PI);
@@ -85,7 +85,7 @@ async function showSampleSoon() {
     sampleIsPending = false;
     const url = URL.createObjectURL(await getBlobFromCanvas(canvas));
     finalImg.src = url;
-    await sleep(10);
+    await finalImg.decode();
     URL.revokeObjectURL(url);
 }
 function saveFile(name, contents) {

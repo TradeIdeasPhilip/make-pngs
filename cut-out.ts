@@ -91,7 +91,7 @@ async function processFile(file: File): Promise<Blob> {
   const url = URL.createObjectURL(file);
   try {
     initialImg.src = url;
-    await sleep(1000);
+    await initialImg.decode();
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "#ffffff";
     context.ellipse(
@@ -134,7 +134,7 @@ async function showSampleSoon() {
   sampleIsPending = false;
   const url = URL.createObjectURL(await getBlobFromCanvas(canvas));
   finalImg.src = url;
-  await sleep(10);
+  await finalImg.decode();
   URL.revokeObjectURL(url);
 }
 
