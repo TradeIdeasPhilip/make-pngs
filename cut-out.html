@@ -6,14 +6,23 @@
   </head>
   <body>
     <h1>Instructions</h1>
-    <p>
-      Drag and drop image files into this window to convert them.
-    </p>
+    <p>Drag and drop image files into this window to convert them.</p>
     <h1>Under the hood</h1>
     <div class="checkerboard">
       <img id="initialImg" width="128" height="128" />
       <canvas id="canvas" width="128" height="128"></canvas>
       <img id="finalImg" width="128" height="128" />
     </div>
+    <h1>Known Issues</h1>
+    <ul>
+      <!-- TODO fix this bug!  
+        Disallow the drop with a warning saying why, or, better yet, find a way to make it work.  
+        Maybe there is one queue for all the dropped files.  
+        You can add to it while another part of the code is reading from it. -->
+      <li>
+        I would <i>not</i> try two large transfers at the same time.&nbsp; Let
+        the first one finish before you start the second.
+      </li>
+    </ul>
   </body>
 </html>
