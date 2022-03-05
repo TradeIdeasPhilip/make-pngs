@@ -103,6 +103,7 @@ cut-out.ts:89 DOMException: The source image cannot be decoded. File {name: 'ic
         linear-gradient(-45deg, #808080 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, #808080 75%),
         linear-gradient(-45deg, transparent 75%, #808080 75%);
+        background-attachment: fixed;
         background-size: 20px 20px;
         background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }</style></head><body>`;
