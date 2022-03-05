@@ -72,14 +72,17 @@ async function processFiles(files: File[]) {
         {
           name: string;
           lastModified: Date;
-          input: Blob;
+          input: Blob | string;
         },
         void,
         unknown
       > {
+        const fileNames = new Set<string>();
+        const sanitizer = document.createElement("span");
         for (const file of files) {
           try {
             const blob = await processFile(file);
+            fileNames.add(file.name);
             yield {
               name: file.name,
               lastModified: new Date(),
@@ -94,6 +97,27 @@ cut-out.ts:89 DOMException: The source image cannot be decoded. File {name: 'ic
             */
           }
         }
+        let index = `<html><head><style>
+        body {
+        background-image: linear-gradient(45deg, #808080 25%, transparent 25%),
+        linear-gradient(-45deg, #808080 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #808080 75%),
+        linear-gradient(-45deg, transparent 75%, #808080 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }</style></head><body>`;
+        fileNames.forEach((fileName) => {
+          sanitizer.innerText = fileName;
+          fileName = sanitizer.innerHTML;
+          index += `<img src="${fileName}" title="${fileName}"> `;
+        });
+        index += `</body><html>`;
+        yield  {
+          name: "index.html",
+          lastModified: new Date(),
+          input: index,
+        };
+
       }
       const fileName = `converted ${files.length} images.zip`;
       saveFile(fileName, await downloadZip(toSave()).blob());
