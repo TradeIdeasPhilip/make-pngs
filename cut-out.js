@@ -38,17 +38,28 @@ async function processFiles(files) {
         }
         case 1: {
             const file = files[0];
-            saveFile(file.name, await processFile(file));
+            try {
+                saveFile(file.name, await processFile(file));
+            }
+            catch (reason) {
+                console.error(reason, file);
+            }
             break;
         }
         default: {
             async function* toSave() {
                 for (const file of files) {
-                    yield {
-                        name: file.name,
-                        lastModified: new Date(),
-                        input: await processFile(file),
-                    };
+                    try {
+                        const blob = await processFile(file);
+                        yield {
+                            name: file.name,
+                            lastModified: new Date(),
+                            input: blob,
+                        };
+                    }
+                    catch (reason) {
+                        console.error(reason, file);
+                    }
                 }
             }
             const fileName = `converted ${files.length} images.zip`;
@@ -77,16 +88,21 @@ async function processFile(file) {
 }
 let sampleIsPending = false;
 async function showSampleSoon() {
-    if (sampleIsPending) {
-        return;
+    try {
+        if (sampleIsPending) {
+            return;
+        }
+        sampleIsPending = true;
+        await sleep(1000);
+        sampleIsPending = false;
+        const url = URL.createObjectURL(await getBlobFromCanvas(canvas));
+        finalImg.src = url;
+        await finalImg.decode();
+        URL.revokeObjectURL(url);
     }
-    sampleIsPending = true;
-    await sleep(10);
-    sampleIsPending = false;
-    const url = URL.createObjectURL(await getBlobFromCanvas(canvas));
-    finalImg.src = url;
-    await finalImg.decode();
-    URL.revokeObjectURL(url);
+    catch (reason) {
+        console.error(reason);
+    }
 }
 function saveFile(name, contents) {
     const link = document.createElement("a");

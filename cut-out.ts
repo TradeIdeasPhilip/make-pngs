@@ -60,7 +60,11 @@ async function processFiles(files: File[]) {
     }
     case 1: {
       const file = files[0];
-      saveFile(file.name, await processFile(file));
+      try {
+        saveFile(file.name, await processFile(file));
+      } catch (reason) {
+        console.error(reason, file);
+      }
       break;
     }
     default: {
@@ -74,11 +78,21 @@ async function processFiles(files: File[]) {
         unknown
       > {
         for (const file of files) {
-          yield {
-            name: file.name,
-            lastModified: new Date(),
-            input: await processFile(file),
-          };
+          try {
+            const blob = await processFile(file);
+            yield {
+              name: file.name,
+              lastModified: new Date(),
+              input: blob,
+            };
+          } catch (reason) {
+            console.error(reason, file);
+            /* Sample output:
+            cut-out.ts:89 DOMException: The source image cannot be decoded. File {name: 'debug.log', lastModified: 1646345226958, lastModifiedDate: Thu Mar 03 2022 14:07:06 GMT-0800 (Pacific Standard Time), webkitRelativePath: '', size: 6249, …}
+toSave @ cut-out.ts:89
+cut-out.ts:89 DOMException: The source image cannot be decoded. File {name: 'icons.psd', lastModified: 1646345270705, lastModifiedDate: Thu Mar 03 2022 14:07:50 GMT-0800 (Pacific Standard Time), webkitRelativePath: '', size: 5140939, …}
+            */
+          }
         }
       }
       const fileName = `converted ${files.length} images.zip`;
@@ -126,16 +140,20 @@ let sampleIsPending = false;
  * @returns Nothing.
  */
 async function showSampleSoon() {
-  if (sampleIsPending) {
-    return;
+  try {
+    if (sampleIsPending) {
+      return;
+    }
+    sampleIsPending = true;
+    await sleep(1000);
+    sampleIsPending = false;
+    const url = URL.createObjectURL(await getBlobFromCanvas(canvas));
+    finalImg.src = url;
+    await finalImg.decode();
+    URL.revokeObjectURL(url);
+  } catch (reason) {
+    console.error(reason);
   }
-  sampleIsPending = true;
-  await sleep(10);
-  sampleIsPending = false;
-  const url = URL.createObjectURL(await getBlobFromCanvas(canvas));
-  finalImg.src = url;
-  await finalImg.decode();
-  URL.revokeObjectURL(url);
 }
 
 function saveFile(name: string, contents: Blob) {
